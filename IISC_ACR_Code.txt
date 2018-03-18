@@ -1,0 +1,53 @@
+//NAME: NIHARIKA PENTAPATI
+//SRN: PES1201700215
+
+
+void usartinit(int baudrate)
+{
+UBRRL=baudrate;
+UBBRH=(baudrate>>8);//To get that as the output from the shift register.
+UCSRC=(1<<URSEL)|(1<<UCSZ0)|(1<<UCSZ1);
+UCSRB=(1<<RXEN)|(1<<TXEN);
+}
+
+char read()
+{
+while(!(UCSRA & (1<<RXC)))
+ return UDR;
+}
+
+void uartwrite(char ch)
+{
+while(!(UCSRA & (1<<UDRE)))
+ UDR=ch;
+}
+void main()
+{
+char ch;
+usartinit(77);
+usartwrite('a');
+DDRB=0xff;
+while(1)
+{
+ch=read();
+if(ch == 'A')
+{
+PORTB=0b00100100;
+}
+if(ch == 'B')
+{
+PORTB = 0b00011000;
+}
+if(ch == 'C')
+{
+PORTB = 0b00000100;
+}
+if (ch == 'D')
+{
+PORTB = 0b00100000;
+}
+if (ch == 'E')
+{
+PORTB = 0b00000000;
+}
+}
